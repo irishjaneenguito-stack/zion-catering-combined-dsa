@@ -1,0 +1,90 @@
+[
+  {
+    "ref": "ZFC-759084",
+    "pkg": "Fiesta Birthday Feast",
+    "date": "2026-09-18",
+    "time": "18:00",
+    "venue": "Tagbilaran City, Bohol",
+    "guests": 80,
+    "addons": [
+      {
+        "id": "dessert",
+        "name": "Dessert Station",
+        "price": 4500,
+        "unit": "flat",
+        "icon": "ice-cream-outline",
+        "img": "https://images.unsplash.com/photo-1637264596042-fcf205a81e1e?w=700&h=360&fit=crop&auto=format",
+        "quantity": 3
+      },
+      {
+        "id": "drinks",
+        "name": "Softdrinks Station",
+        "price": 1500,
+        "unit": "flat",
+        "icon": "cafe-outline",
+        "img": "https://images.unsplash.com/photo-1766270122919-9453e6ae8bd6?w=700&h=360&fit=crop&auto=format",
+        "quantity": 1
+      }
+    ],
+    "total": 45400,
+    "deposit": 22700,
+    "balance": 22700,
+    "status": "confirmed",
+    "rated": false,
+    "method": "Cash on Delivery",
+    "customer": {
+      "name": "Zion Guest",
+      "phone": "johnangelobanga@gmail.com",
+      "email": ""
+    },
+    "createdAt": "2026-09-06T04:47:19.761Z"
+  },
+  {
+    "ref": "ZFC-208114",
+    "pkg": "Boardroom Banquet",
+    "date": "2026-07-22",
+    "time": "12:00",
+    "venue": "Tagbilaran City, Bohol",
+    "guests": 40,
+    "addons": [],
+    "total": 16800,
+    "deposit": 8400,
+    "balance": 8400,
+    "status": "served",
+    "rated": true,
+    "method": "Bank Transfer",
+    "customer": {
+      "name": "Demo Customer",
+      "phone": "+63 917 123 4567"
+    },
+    "createdAt": "2026-07-15T09:00:00.000Z"
+  },
+  {
+    "ref": "ZFC-208219",
+    "pkg": "Fiesta Birthday Feast",
+    "date": "2026-08-30",
+    "time": "18:00",
+    "venue": "Brgy. Cogon, Tagbilaran City, Bohol",
+    "guests": 45,
+    "addons": [
+      {
+        "id": "dessert",
+        "name": "Dessert Station",
+        "price": 4500,
+        "unit": "flat",
+        "quantity": 1
+      }
+    ],
+    "total": 21600,
+    "deposit": 10800,
+    "balance": 10800,
+    "status": "delivery",
+    "rated": false,
+    "method": "GCash",
+    "customer": {
+      "name": "Demo Customer",
+      "phone": "+63 917 123 4567"
+    },
+    "createdAt": "2026-08-22T09:00:00.000Z"
+  }
+]

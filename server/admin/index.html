@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zion Catering Admin</title>
+    <link rel="stylesheet" href="/admin/styles.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brandMark">Z</div>
+        <div>
+          <p class="eyebrow">Zion Catering</p>
+          <h1>Admin Suite</h1>
+        </div>
+      </div>
+      <nav>
+        <a href="#bookings" class="active">Bookings</a>
+        <a href="#customers">Customers</a>
+        <a href="#messages">Messages</a>
+      </nav>
+      <div class="sidebarNote">
+        <span>Shared Database</span>
+        <strong>Mobile and admin are synced through one API.</strong>
+      </div>
+    </aside>
+
+    <main class="page">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Shared API dashboard</p>
+          <h2>Operations Control</h2>
+          <p class="subtitle">Manage mobile bookings, customer records, and catering inquiries from one place.</p>
+        </div>
+        <div class="topActions">
+          <span id="apiStatus">Loading</span>
+          <button id="refreshBtn" type="button">Refresh Data</button>
+        </div>
+      </header>
+
+      <section class="stats" aria-label="Dashboard summary">
+        <article>
+          <span>Bookings</span>
+          <strong id="bookingCount">0</strong>
+          <small>All reservations</small>
+        </article>
+        <article>
+          <span>Pipeline</span>
+          <strong id="revenueTotal">PHP 0</strong>
+          <small>Gross booking value</small>
+        </article>
+        <article>
+          <span>Customers</span>
+          <strong id="customerCount">0</strong>
+          <small>Mobile app users</small>
+        </article>
+        <article>
+          <span>Messages</span>
+          <strong id="messageCount">0</strong>
+          <small>Customer inquiries</small>
+        </article>
+      </section>
+
+      <section id="bookings" class="panel">
+        <div class="panelHead">
+          <div>
+            <p class="eyebrow">Mobile app data</p>
+            <h3>Bookings</h3>
+          </div>
+          <p class="panelMeta">Status changes sync back to the shared database.</p>
+        </div>
+        <div class="tableWrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Reference</th>
+                <th>Customer</th>
+                <th>Package</th>
+                <th>Date</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="bookingRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="customers" class="panel">
+        <div class="panelHead">
+          <div>
+            <p class="eyebrow">Accounts</p>
+            <h3>Customers</h3>
+          </div>
+        </div>
+        <div id="customerRows" class="list"></div>
+      </section>
+
+      <section id="messages" class="panel">
+        <div class="panelHead">
+          <div>
+            <p class="eyebrow">Inquiries</p>
+            <h3>Contact Messages</h3>
+          </div>
+        </div>
+        <div id="messageRows" class="list"></div>
+      </section>
+    </main>
+
+    <script src="/admin/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "ceb42194-798e-43bd-bce6-5ae7efd69370",
+    "role": "customer",
+    "name": "Zion Guest",
+    "phone": "",
+    "email": "johnangelobanga@gmail.com",
+    "updatedAt": "2026-09-06T04:46:47.059Z",
+    "createdAt": "2026-09-06T04:45:43.157Z"
+  },
+  {
+    "id": "demo-customer",
+    "role": "customer",
+    "name": "Demo Customer",
+    "phone": "+63 917 123 4567",
+    "email": "demo@zionfood.ph",
+    "createdAt": "2026-07-15T09:00:00.000Z",
+    "updatedAt": "2026-07-15T09:00:00.000Z"
+  }
+]

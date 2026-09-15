@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zion Catering - Web Admin Suite</title>
+  <link rel="stylesheet" href="/admin/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="loginModal" class="login-modal" style="display: none;">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="brand-badge">Z</div>
+        <h2>Admin Authentication</h2>
+        <p>Sign in to access Zion Catering operations suite</p>
+      </div>
+      <form id="adminLoginForm">
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="loginEmail" value="admin@zioncatering.ph" required />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="loginPassword" value="admin123" required />
+        </div>
+        <div id="loginError" class="error-msg" style="display: none;"></div>
+        <button type="submit" class="btn btn-primary btn-block">Sign In to Dashboard</button>
+        <div class="login-hint">Demo credentials: <code>admin@zioncatering.ph</code> / <code>admin123</code></div>
+      </form>
+    </div>
+  </div>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand-area">
+        <div class="brand-logo">Z</div>
+        <div>
+          <h1 class="brand-title">Zion Catering</h1>
+          <span class="brand-subtitle">Operations Web Suite</span>
+        </div>
+      </div>
+
+      <nav class="nav-links">
+        <a href="#dashboard" class="nav-item active" data-tab="dashboard">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+          Dashboard
+        </a>
+        <a href="#bookings" class="nav-item" data-tab="bookings">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Bookings & Events
+        </a>
+        <a href="#customers" class="nav-item" data-tab="customers">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Customers
+        </a>
+        <a href="#staff" class="nav-item" data-tab="staff">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Staff & Crew
+        </a>
+        <a href="#packages" class="nav-item" data-tab="packages">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m2 7 10-5 10 5-10 5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg>
+          Packages & Menu
+        </a>
+        <a href="#payments" class="nav-item" data-tab="payments">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+          Payments
+        </a>
+        <a href="#reports" class="nav-item" data-tab="reports">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+          Reports & Analytics
+        </a>
+        <a href="#inquiries" class="nav-item" data-tab="inquiries">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Customer Inquiries
+          <span id="unreadInquiriesBadge" class="nav-badge" style="display: none;">0</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-pill">
+          <div class="user-avatar" id="adminInitials">AD</div>
+          <div class="user-meta">
+            <strong id="adminName">Admin User</strong>
+            <small>Administrator</small>
+          </div>
+          <button id="logoutBtn" title="Logout" class="icon-btn-ghost">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-title">
+          <span class="badge badge-subtle">MySQL Database: zion_catering_services</span>
+          <h2 id="pageTitle">Operations Dashboard</h2>
+        </div>
+        <div class="topbar-actions">
+          <span id="dbStatus" class="status-indicator online">Connected</span>
+          <button id="refreshBtn" class="btn btn-secondary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+            Refresh
+          </button>
+          <a href="/staff" target="_blank" class="btn btn-ghost" title="Open Web Staff App">
+            Open Staff Web App &rarr;
+          </a>
+        </div>
+      </header>
+
+      <!-- Dashboard View -->
+      <section id="view-dashboard" class="content-view">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Total Bookings</div>
+            <div class="stat-value" id="statBookings">0</div>
+            <div class="stat-meta">Across all Bohol locations</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Gross Revenue Pipeline</div>
+            <div class="stat-value text-pink" id="statRevenue">PHP 0</div>
+            <div class="stat-meta">Confirmed & active bookings</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Registered Customers</div>
+            <div class="stat-value" id="statCustomers">0</div>
+            <div class="stat-meta">Synced from mobile app</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Active Catering Crew</div>
+            <div class="stat-value" id="statStaff">0</div>
+            <div class="stat-meta">Chefs, service, & logistics</div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <!-- Recent Bookings Panel -->
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>Upcoming & Recent Bookings</h3>
+                <p>Live reservations synchronized with Customer Mobile App</p>
+              </div>
+              <a href="#bookings" class="link-btn" onclick="switchTab('bookings')">View All</a>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Ref</th>
+                    <th>Customer</th>
+                    <th>Package</th>
+                    <th>Date & Time</th>
+                    <th>Guests</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboardBookingsBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Quick Stats & Pipeline -->
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>Catering Status Breakdown</h3>
+                <p>Event fulfillment lifecycle</p>
+              </div>
+            </div>
+            <div id="statusBreakdown" class="status-summary-list"></div>
+
+            <div class="panel-header mt-4">
+              <div>
+                <h3>Recent Customer Inquiries</h3>
+                <p>Inbound questions via Mobile App</p>
+              </div>
+            </div>
+            <div id="dashboardInquiries" class="inquiries-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bookings View -->
+      <section id="view-bookings" class="content-view" style="display: none;">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h3>All Catering Bookings</h3>
+              <p>Manage reservations, change event progress, and assign staff</p>
+            </div>
+            <div class="filter-group">
+              <input type="text" id="bookingSearch" placeholder="Search reference, customer, venue..." class="input-search" />
+              <select id="bookingStatusFilter" class="select-filter">
+                <option value="all">All Statuses</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="preparing">Preparing</option>
+                <option value="ready">Ready</option>
+                <option value="delivery">On the way</option>
+                <option value="served">Completed</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Reference</th>
+                  <th>Customer Contact</th>
+                  <th>Package & Add-ons</th>
+                  <th>Date & Schedule</th>
+                  <th>Venue Address</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Assign Staff</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="allBookingsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Customers View -->
+      <section id="view-customers" class="content-view" style="display: none;">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h3>Customer Accounts</h3>
+              <p>Registered mobile users, event history, and contact profiles</p>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Customer Name</th>
+                  <th>Email</th>
+                  <th>Mobile Phone</th>
+                  <th>Location</th>
+                  <th>Total Events</th>
+                  <th>Total Spent</th>
+                  <th>Joined Date</th>
+                </tr>
+              </thead>
+              <tbody id="customersTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Staff View -->
+      <section id="view-staff" class="content-view" style="display: none;">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h3>Catering Staff & Operational Team</h3>
+              <p>Manage kitchen leads, banquet servers, event coordinators, and drivers</p>
+            </div>
+            <button id="openAddStaffBtn" class="btn btn-primary">+ Add New Staff</button>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Position</th>
+                  <th>Department</th>
+                  <th>Contact Email / Phone</th>
+                  <th>Status</th>
+                  <th>Active Shifts</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="staffTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Packages & Menu View -->
+      <section id="view-packages" class="content-view" style="display: none;">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h3>Catering Packages & Inclusions</h3>
+              <p>Manage package menus, per-head pricing, and minimum pax counts</p>
+            </div>
+          </div>
+          <div id="packagesGrid" class="packages-cards-grid"></div>
+        </div>
+      </section>
+
+      <!-- Payments View -->
+      <section id="view-payments" class="content-view" style="display: none;">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h3>Payments & Cashier Records</h3>
+              <p>Track deposits, balances, GCash, and Bank Transfer verifications</p>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Booking Ref</th>
+                  <th>Customer</th>
+                  <th>Type</th>
+                  <th>Payment Method</th>
+                  <th>Amount</th>
+                  <th>Reference #</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="paymentsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Reports View -->
+      <section id="view-reports" class="content-view" style="display: none;">
+        <div class="reports-grid">
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>Monthly Revenue & Booking Trends</h3>
+                <p>Gross catering pipeline over time</p>
+              </div>
+            </div>
+            <div id="monthlyRevenueReport" class="report-content"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>Package Popularity</h3>
+                <p>Most booked celebrations in Bohol</p>
+              </div>
+            </div>
+            <div id="packagePopularityReport" class="report-content"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Inquiries View -->
+      <section id="view-inquiries" class="content-view" style="display: none;">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h3>Customer Inquiries & Messages</h3>
+              <p>Messages submitted through Mobile App Support</p>
+            </div>
+          </div>
+          <div id="allInquiriesList" class="inquiries-full-list"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Booking Detail Drawer / Modal -->
+  <div id="bookingDrawer" class="modal-backdrop" style="display: none;">
+    <div class="drawer-card">
+      <div class="drawer-header">
+        <div>
+          <span id="drawerRef" class="badge badge-primary">ZFC-XXXXXX</span>
+          <h3 id="drawerPackage">Package Name</h3>
+        </div>
+        <button id="closeDrawerBtn" class="close-btn">&times;</button>
+      </div>
+      <div class="drawer-body" id="drawerContent"></div>
+    </div>
+  </div>
+
+  <!-- Assign Staff Modal -->
+  <div id="assignModal" class="modal-backdrop" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Assign Staff to Booking</h3>
+        <button id="closeAssignModalBtn" class="close-btn">&times;</button>
+      </div>
+      <form id="assignStaffForm">
+        <input type="hidden" id="assignBookingRef" />
+        <div class="form-group">
+          <label>Booking</label>
+          <input type="text" id="assignBookingDisplay" readonly class="input-readonly" />
+        </div>
+        <div class="form-group">
+          <label>Select Staff Member</label>
+          <select id="assignStaffSelect" required class="select-filter w-100"></select>
+        </div>
+        <div class="form-group">
+          <label>Assigned Role for Event</label>
+          <input type="text" id="assignRoleInput" placeholder="e.g. Lead Chef, Event Coordinator, Server" required />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Shift Start</label>
+            <input type="time" id="assignShiftStart" />
+          </div>
+          <div class="form-group">
+            <label>Shift End</label>
+            <input type="time" id="assignShiftEnd" />
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Confirm Staff Assignment</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Staff Modal -->
+  <div id="addStaffModal" class="modal-backdrop" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Add Catering Staff Member</h3>
+        <button id="closeAddStaffBtn" class="close-btn">&times;</button>
+      </div>
+      <form id="addStaffForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>First Name</label>
+            <input type="text" id="newStaffFirst" required placeholder="Juan" />
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" id="newStaffLast" required placeholder="Dela Cruz" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email (for staff web login)</label>
+          <input type="email" id="newStaffEmail" required placeholder="juan@zioncatering.ph" />
+        </div>
+        <div class="form-group">
+          <label>Mobile Phone</label>
+          <input type="text" id="newStaffPhone" placeholder="+63 917 123 4567" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Position</label>
+            <input type="text" id="newStaffPosition" required placeholder="e.g. Head Chef, Waiter, Driver" />
+          </div>
+          <div class="form-group">
+            <label>Department</label>
+            <select id="newStaffDept" class="select-filter w-100">
+              <option value="kitchen">Kitchen / Culinary</option>
+              <option value="service">Service Crew</option>
+              <option value="coordination">Event Coordination</option>
+              <option value="logistics">Logistics & Delivery</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Initial Password</label>
+          <input type="password" id="newStaffPassword" required value="staff123" />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Save Staff Member</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Package Modal -->
+  <div id="editPackageModal" class="modal-backdrop" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="editPackageTitle">Edit Package</h3>
+        <button id="closeEditPackageBtn" class="close-btn">&times;</button>
+      </div>
+      <form id="editPackageForm">
+        <input type="hidden" id="editPackageId" />
+        <div class="form-group">
+          <label>Price Per Head (PHP)</label>
+          <input type="number" id="editPackagePrice" required min="50" step="10" />
+        </div>
+        <div class="form-group">
+          <label>Minimum Guests</label>
+          <input type="number" id="editPackageMin" required min="10" step="5" />
+        </div>
+        <div class="form-group">
+          <label>Tagline</label>
+          <input type="text" id="editPackageTagline" required />
+        </div>
+        <div class="form-group">
+          <label>
+            <input type="checkbox" id="editPackageActive" />
+            Package is Active & Visible to Mobile App
+          </label>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Update Package</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="/admin/app.js"></script>
+</body>
+</html>
+
