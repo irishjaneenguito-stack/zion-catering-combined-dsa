@@ -62,7 +62,7 @@ router.get("/", optionalAuth, async (req, res) => {
     let query = `
       SELECT b.*, 
              p.name AS package_name, p.code AS package_code,
-             u.first_name, u.last_name, u.email, u.phone,
+             u.firstName AS first_name, u.lastName AS last_name, u.email, u.phone,
              (SELECT payment_method FROM payments WHERE booking_id = b.id ORDER BY id DESC LIMIT 1) AS payment_method,
              (SELECT status FROM payments WHERE booking_id = b.id ORDER BY id DESC LIMIT 1) AS payment_status,
              (SELECT COUNT(*) FROM reviews_feedback WHERE booking_id = b.id) AS has_feedback
@@ -199,7 +199,7 @@ router.post("/", optionalAuth, async (req, res) => {
 
         // Create user with default random hash
         const [newUser] = await connection.query(
-          `INSERT INTO users (first_name, last_name, email, phone, password_hash, role)
+          `INSERT INTO users (firstName, lastName, email, phone, passwordHash, role)
            VALUES (?, ?, ?, ?, '$2b$10$dp730rD9wgtY4BzTXv.SQe2LtMp1UEJpHioERxEAJFj.3FGKZSdO6', 'customer')`,
           [first, last, custEmail || null, custPhone || null]
         );
@@ -360,7 +360,7 @@ router.get("/:ref", async (req, res) => {
     const [bookings] = await pool.query(
       `SELECT b.*, 
               p.name AS package_name, p.code AS package_code,
-              u.first_name, u.last_name, u.email, u.phone,
+              u.firstName AS first_name, u.lastName AS last_name, u.email, u.phone,
               (SELECT payment_method FROM payments WHERE booking_id = b.id ORDER BY id DESC LIMIT 1) AS payment_method,
               (SELECT status FROM payments WHERE booking_id = b.id ORDER BY id DESC LIMIT 1) AS payment_status
        FROM bookings b
@@ -497,4 +497,3 @@ router.post("/:ref/feedback", optionalAuth, async (req, res) => {
 });
 
 module.exports = router;
-

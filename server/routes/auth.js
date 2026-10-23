@@ -36,7 +36,7 @@ router.post("/login", async (req, res) => {
     }
 
     const user = users[0];
-    const isMatch = await bcrypt.compare(password, user.password_hash);
+    const isMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch) {
       return res.status(401).json({ error: "Invalid credentials." });
     }
@@ -53,7 +53,7 @@ router.post("/login", async (req, res) => {
       staffProfile = staff[0] || null;
     }
 
-    const fullName = `${user.first_name} ${user.last_name}`.trim();
+    const fullName = `${user.firstName} ${user.lastName}`.trim();
     const tokenPayload = {
       id: user.id,
       email: user.email,
@@ -71,12 +71,12 @@ router.post("/login", async (req, res) => {
       user: {
         id: user.id,
         name: fullName,
-        firstName: user.first_name,
-        lastName: user.last_name,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         phone: user.phone,
         role: user.role,
-        avatarUrl: user.avatar_url,
+        avatarUrl: user.picture || null,
         customerProfile,
         staffProfile,
       },
@@ -120,7 +120,7 @@ router.post("/register", async (req, res) => {
     await connection.beginTransaction();
 
     const [userResult] = await connection.query(
-      `INSERT INTO users (first_name, last_name, email, phone, password_hash, role, status)
+      `INSERT INTO users (firstName, lastName, email, phone, passwordHash, role, status)
        VALUES (?, ?, ?, ?, ?, 'customer', 'active')`,
       [first, last, cleanEmail || null, cleanPhone || null, passwordHash]
     );
@@ -177,7 +177,7 @@ router.post("/register", async (req, res) => {
 router.get("/me", authenticateToken, async (req, res) => {
   try {
     const [users] = await pool.query(
-      `SELECT id, first_name, last_name, email, phone, role, status, avatar_url, created_at FROM users WHERE id = ?`,
+      `SELECT id, firstName, lastName, email, phone, role, status, picture AS avatarUrl, createdAt FROM users WHERE id = ?`,
       [req.user.id]
     );
 
@@ -200,7 +200,7 @@ router.get("/me", authenticateToken, async (req, res) => {
     return res.json({
       user: {
         ...user,
-        name: `${user.first_name} ${user.last_name}`.trim(),
+        name: `${user.firstName} ${user.lastName}`.trim(),
         customerProfile,
         staffProfile,
       },
@@ -212,4 +212,3 @@ router.get("/me", authenticateToken, async (req, res) => {
 });
 
 module.exports = router;
-

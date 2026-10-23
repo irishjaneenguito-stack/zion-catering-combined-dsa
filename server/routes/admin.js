@@ -104,7 +104,7 @@ router.get("/bookings", async (req, res) => {
     const { status, search } = req.query;
     let query = `
       SELECT b.*, p.name AS package_name, p.code AS package_code,
-             u.first_name, u.last_name, u.email, u.phone
+             u.firstName AS first_name, u.lastName AS last_name, u.email, u.phone
       FROM bookings b
       JOIN packages p ON b.package_id = p.id
       JOIN customers c ON b.customer_id = c.id
@@ -119,7 +119,7 @@ router.get("/bookings", async (req, res) => {
     }
 
     if (search) {
-      query += ` AND (b.booking_reference LIKE ? OR u.first_name LIKE ? OR u.last_name LIKE ? OR b.venue_address LIKE ?)`;
+      query += ` AND (b.booking_reference LIKE ? OR u.firstName LIKE ? OR u.lastName LIKE ? OR b.venue_address LIKE ?)`;
       const term = `%${search}%`;
       params.push(term, term, term, term);
     }
@@ -150,7 +150,7 @@ router.get("/bookings", async (req, res) => {
     // Fetch staff assignments
     const [assignments] = await pool.query(`
       SELECT esa.booking_id, esa.assigned_role, esa.status AS assign_status,
-             u.first_name, u.last_name, sp.position, sp.id AS staff_profile_id
+             u.firstName AS first_name, u.lastName AS last_name, sp.position, sp.id AS staff_profile_id
       FROM event_staff_assignments esa
       JOIN staff_profiles sp ON esa.staff_profile_id = sp.id
       JOIN users u ON sp.user_id = u.id
@@ -223,11 +223,11 @@ router.get("/staff", async (req, res) => {
   try {
     const [staff] = await pool.query(`
       SELECT sp.id, sp.user_id, sp.position, sp.department, sp.status, sp.hire_date,
-             u.first_name, u.last_name, u.email, u.phone,
+             u.firstName AS first_name, u.lastName AS last_name, u.email, u.phone,
              (SELECT COUNT(*) FROM event_staff_assignments WHERE staff_profile_id = sp.id AND status = 'assigned') AS active_assignments
       FROM staff_profiles sp
       JOIN users u ON sp.user_id = u.id
-      ORDER BY sp.department ASC, u.first_name ASC
+      ORDER BY sp.department ASC, u.firstName ASC
     `);
 
     const formatted = staff.map((s) => ({
@@ -264,7 +264,7 @@ router.post("/staff", async (req, res) => {
     await connection.beginTransaction();
 
     const [userRes] = await connection.query(
-      `INSERT INTO users (first_name, last_name, email, phone, password_hash, role, status)
+      `INSERT INTO users (firstName, lastName, email, phone, passwordHash, role, status)
        VALUES (?, ?, ?, ?, ?, 'staff', 'active')`,
       [firstName.trim(), (lastName || "").trim(), (email || "").trim() || null, (phone || "").trim() || null, passwordHash]
     );
@@ -291,14 +291,14 @@ router.get("/customers", async (req, res) => {
   try {
     const [customers] = await pool.query(`
       SELECT c.id, c.user_id, c.address, c.city, c.province,
-             u.first_name, u.last_name, u.email, u.phone, u.created_at,
+             u.firstName AS first_name, u.lastName AS last_name, u.email, u.phone, u.createdAt AS created_at,
              COUNT(b.id) AS total_bookings,
              COALESCE(SUM(b.total_amount), 0) AS total_spent
       FROM customers c
       JOIN users u ON c.user_id = u.id
       LEFT JOIN bookings b ON b.customer_id = c.id
       GROUP BY c.id
-      ORDER BY total_spent DESC, u.created_at DESC
+      ORDER BY total_spent DESC, u.createdAt DESC
     `);
 
     const formatted = customers.map((c) => ({
@@ -383,7 +383,7 @@ router.get("/payments", async (req, res) => {
   try {
     const [payments] = await pool.query(`
       SELECT p.*, b.booking_reference, b.event_date,
-             u.first_name, u.last_name
+             u.firstName AS first_name, u.lastName AS last_name
       FROM payments p
       JOIN bookings b ON p.booking_id = b.id
       JOIN customers c ON b.customer_id = c.id
@@ -461,4 +461,3 @@ router.get("/reports", async (req, res) => {
 });
 
 module.exports = router;
-

@@ -1,7 +1,7 @@
-const express = require("express");
+    const express = require("express");
 const cors = require("cors");
 const path = require("node:path");
-require("dotenv").config();
+require("dotenv").config({ path: path.resolve(__dirname, "..", ".env") });
 
 const pool = require("./config/db");
 const authRoutes = require("./routes/auth");
@@ -12,6 +12,9 @@ const customersRoutes = require("./routes/customers");
 const adminRoutes = require("./routes/admin");
 const staffRoutes = require("./routes/staff");
 const contactRoutes = require("./routes/contact");
+
+// ✅ MAO NI ANG NA-DUGANG NIMO (Order Queue Routes)
+const orderQueueRoutes = require("./routes/orderQueue");
 
 const app = express();
 const PORT = Number(process.env.API_PORT || 4000);
@@ -41,12 +44,22 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/staff", staffRoutes);
 app.use("/api/contact", contactRoutes);
 
-// Backward compatibility: GET /api/users & POST /api/users (used in existing mobile app)
+// ✅ MAO NI ANG NA-DUGANG NIMO (Mount the route)
+app.use("/api/order-queue", orderQueueRoutes);
+
+app.use((error, req, res, next) => {
+  if (error instanceof SyntaxError && error.status === 400 && "body" in error) {
+    return res.status(400).json({ error: "Invalid JSON request body. Use Body > raw" });
+  }
+  return next(error);
+});
+
+// Backward compatibility: GET /api/users & POST /api/users
 app.get("/api/users", async (req, res) => {
   try {
     const [users] = await pool.query(
-      `SELECT u.id, CONCAT(u.first_name, ' ', u.last_name) AS name, u.email, u.phone, u.role, u.created_at AS createdAt 
-       FROM users u ORDER BY u.created_at DESC`
+      `SELECT u.id, CONCAT(u.firstName, ' ', u.lastName) AS name, u.email, u.phone, u.role 
+       FROM users u ORDER BY u.createdAt DESC`
     );
     res.json({ users });
   } catch (error) {
@@ -65,7 +78,7 @@ app.post("/api/users", async (req, res) => {
 
     // Check if exists
     const [existing] = await pool.query(
-      `SELECT u.id FROM users u WHERE (u.email != '' AND u.email = ?) OR (u.phone != '' AND u.phone = ?) LIMIT 1`,
+      `SELECT u.id FROM users u WHERE (u.email != '' AND u.email = ?) OR (u.phone != '' AND u.phone = ?)`,
       [cleanEmail || "---", cleanPhone || "---"]
     );
 
@@ -74,8 +87,8 @@ app.post("/api/users", async (req, res) => {
     }
 
     const [insertResult] = await pool.query(
-      `INSERT INTO users (first_name, last_name, email, phone, password_hash, role)
-       VALUES (?, ?, ?, ?, '$2b$10$dp730rD9wgtY4BzTXv.SQe2LtMp1UEJpHioERxEAJFj.3FGKZSdO6', 'customer')`,
+      `INSERT INTO users (firstName, lastName, email, phone, passwordHash, role)
+       VALUES (?, ?, ?, ?, '$2b$10$dp730rD9wgtY4BzTXv.SQe2LtMp1UEJpHioERxEAJFj.3FGK', 'customer')`,
       [first, last, cleanEmail || null, cleanPhone || null]
     );
 
@@ -83,7 +96,7 @@ app.post("/api/users", async (req, res) => {
     await pool.query(`INSERT INTO customers (user_id) VALUES (?)`, [userId]);
 
     return res.status(201).json({
-      user: { id: userId, name: name.trim(), email: cleanEmail, phone: cleanPhone },
+      user: { id: userId, name: name.trim(), email: cleanEmail, phone: cleanPhone }
     });
   } catch (error) {
     res.status(500).json({ error: error.message });

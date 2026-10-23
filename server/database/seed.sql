@@ -1,8 +1,8 @@
 -- Zion Catering Services
 -- Seed Data for MySQL
--- Database: zion_catering_services
+-- Database: bisublar_zc
 
-USE zion_catering_services;
+USE bisublar_zc;
 
 SET FOREIGN_KEY_CHECKS = 0;
 
@@ -27,7 +27,7 @@ TRUNCATE TABLE users;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- 1. Insert Users (Password is 'admin123' for admin, 'staff123' for staff, 'customer123' for customers)
-INSERT INTO users (id, first_name, last_name, email, phone, password_hash, role, status) VALUES
+INSERT INTO users (id, firstName, lastName, email, phone, passwordHash, role, status) VALUES
 (1, 'Admin', 'Zion', 'admin@zioncatering.ph', '+63 917 000 0001', '$2b$10$jxsY/AANdkwLsQUTp8x3uOall5lPVISVrmkCCl4lY0Xkya.vX9Ity', 'admin', 'active'),
 (2, 'Michael', 'Chef', 'chef@zioncatering.ph', '+63 917 000 0002', '$2b$10$p4ZiXjCRu6SGZq/Quh4Rm.3DWkXBToQ.Hv9IJTYSE9B7BOM7u2aci', 'staff', 'active'),
 (3, 'Maria', 'Santos', 'coordinator@zioncatering.ph', '+63 917 000 0003', '$2b$10$p4ZiXjCRu6SGZq/Quh4Rm.3DWkXBToQ.Hv9IJTYSE9B7BOM7u2aci', 'staff', 'active'),
@@ -158,4 +158,3 @@ INSERT INTO reviews_feedback (booking_id, customer_id, rating, comment, created_
 INSERT INTO contact_inquiries (name, email, phone, message, status, created_at) VALUES
 ('Grace Lim', 'grace.lim@gmail.com', '+63 920 123 7890', 'Inquiring for wedding catering in Panglao next November. Can you customize the menu?', 'unread', '2026-09-08 14:20:00'),
 ('Mark Villanueva', 'mark.v@yahoo.com', '+63 917 888 3322', 'Do you provide sound system and lights with the corporate package?', 'read', '2026-09-05 11:10:00');
-

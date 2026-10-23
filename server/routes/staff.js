@@ -15,7 +15,7 @@ router.get("/dashboard", authenticateToken, async (req, res) => {
     let eventsQuery = `
       SELECT b.id, b.booking_reference, b.event_date, b.event_time, b.venue_address,
              b.guest_count, b.status, p.name AS package_name, esa.assigned_role,
-             u.first_name AS customer_first, u.last_name AS customer_last, u.phone AS customer_phone
+             u.firstName AS customer_first, u.lastName AS customer_last, u.phone AS customer_phone
       FROM event_staff_assignments esa
       JOIN bookings b ON esa.booking_id = b.id
       JOIN packages p ON b.package_id = p.id
@@ -63,7 +63,7 @@ router.get("/events", authenticateToken, async (req, res) => {
 
     let query = `
       SELECT b.*, p.name AS package_name, p.code AS package_code,
-             u.first_name, u.last_name, u.phone, u.email,
+             u.firstName AS first_name, u.lastName AS last_name, u.phone, u.email,
              esa.assigned_role, esa.status AS assignment_status
       FROM bookings b
       JOIN packages p ON b.package_id = p.id
@@ -112,7 +112,7 @@ router.get("/events/:ref", authenticateToken, async (req, res) => {
     const { ref } = req.params;
     const [bookings] = await pool.query(
       `SELECT b.*, p.name AS package_name, p.code AS package_code,
-              u.first_name, u.last_name, u.phone, u.email
+              u.firstName AS first_name, u.lastName AS last_name, u.phone, u.email
        FROM bookings b
        JOIN packages p ON b.package_id = p.id
        JOIN customers c ON b.customer_id = c.id
@@ -232,4 +232,3 @@ router.patch("/events/:ref/status", authenticateToken, async (req, res) => {
 });
 
 module.exports = router;
-

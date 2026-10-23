@@ -8,7 +8,7 @@ const router = express.Router();
 router.get("/me", authenticateToken, async (req, res) => {
   try {
     const [rows] = await pool.query(
-      `SELECT u.id AS user_id, u.first_name, u.last_name, u.email, u.phone,
+      `SELECT u.id AS user_id, u.firstName AS first_name, u.lastName AS last_name, u.email, u.phone,
               c.id AS customer_id, c.alt_phone, c.address, c.city, c.province
        FROM users u
        LEFT JOIN customers c ON c.user_id = u.id
@@ -105,4 +105,3 @@ router.delete("/venues/:id", authenticateToken, async (req, res) => {
 });
 
 module.exports = router;
-

@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
-require("dotenv").config();
+const path = require("node:path");
+require("dotenv").config({ path: path.resolve(__dirname, "..", "..", ".env") });
 
 const JWT_SECRET = process.env.JWT_SECRET || "zion_catering_super_secret_jwt_key_2026";
 
@@ -54,4 +55,3 @@ module.exports = {
   optionalAuth,
   requireRole,
 };
-

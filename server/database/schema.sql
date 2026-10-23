@@ -1,9 +1,10 @@
--- Zion Catering Services Management System
+cd "C:\Users\Irish Jane\OneDrive\Documents\Documents\Zion-Catering-Services--Server"
+npm.cmd start-- Zion Catering Services Management System
 -- Normalized MySQL Database Schema
--- Database: zion_catering_services
+-- Database: bisublar_zc
 
-CREATE DATABASE IF NOT EXISTS zion_catering_services CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE zion_catering_services;
+CREATE DATABASE IF NOT EXISTS bisublar_zc CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE bisublar_zc;
 
 SET FOREIGN_KEY_CHECKS = 0;
 
@@ -30,16 +31,16 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- 1. Central Users & Authentication
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    first_name VARCHAR(100) NOT NULL,
-    last_name VARCHAR(100) NOT NULL,
+    firstName VARCHAR(100) NOT NULL,
+    lastName VARCHAR(100) NOT NULL,
     email VARCHAR(191) UNIQUE NULL,
     phone VARCHAR(30) UNIQUE NULL,
-    password_hash VARCHAR(255) NOT NULL,
+    passwordHash VARCHAR(255) NOT NULL,
     role ENUM('customer', 'admin', 'staff') NOT NULL DEFAULT 'customer',
     status ENUM('active', 'inactive', 'suspended') NOT NULL DEFAULT 'active',
-    avatar_url VARCHAR(255) NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    avatarUrl VARCHAR(255) NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_user_role (role),
     INDEX idx_user_status (status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -266,4 +267,3 @@ CREATE TABLE notifications (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_notif_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
